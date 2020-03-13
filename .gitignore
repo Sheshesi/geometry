@@ -1,0 +1,38 @@
+#Prerequisites
+*.d
+
+#Complited Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+#precomlited Headers
+*.gch
+*.pch
+
+#Comppiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+#Fortran module files
+*.mod
+*.smod
+
+#Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+#Executables
+*.exe
+*.out
+*.app
+
+#Trash
+main
+makefile-
+main.cpp-
+
