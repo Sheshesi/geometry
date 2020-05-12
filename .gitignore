@@ -1,38 +1,10 @@
-#Prerequisites
-*.d
-
-#Complited Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-#precomlited Headers
-*.gch
-*.pch
-
-#Comppiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-#Fortran module files
-*.mod
-*.smod
-
-#Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-#Executables
-*.exe
+src/CMakeLists.txt
+src/cmake-build-debug/*
+/.idea/*
 *.out
-*.app
-
-#Trash
-main
-makefile-
-main.cpp-
-
+*.o
+test/CMakeLists.txt
+test/cmake-build-debug/*
+test/ctest.h
+bin/testing
+bin/geometry
