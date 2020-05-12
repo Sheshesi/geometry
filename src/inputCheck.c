@@ -5,7 +5,7 @@
 char** file_func(char** data)
 {
     FILE* myfile;
-    myfile = fopen("./example/my.txt", "r");
+    myfile = fopen("./example/figures.txt", "r");
     if (myfile == NULL) {
         printf("File open error!");
         return 0;
