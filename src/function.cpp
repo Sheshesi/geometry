@@ -1,5 +1,4 @@
-#include "inputCheck.h"
-#include "check.h"
+#include "function.h"
 #include "print.h"
 #include <stdio.h>
 char** file_func(char** data)
