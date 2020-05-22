@@ -1,19 +1,25 @@
-#include "check.h"
-#include "inputCheck.h"
+#include "function.h"
 #include "print.h"
-#include <stdio.h>
-#define MAX_LEN 100
+#include <iostream>
+#include <math.h>
+
+using namespace std;
+
 int main()
 {
-    char** data = (char**)malloc(MAX_LEN * sizeof(char*));
-    for (int k = 0; k < MAX_LEN; k++) {
-        data[k] = (char*)malloc(MAX_LEN * sizeof(char));
-    }
-    data = file_func(data);
-    for (int i = 0; i < MAX_LEN; i++) {
-        for (int j = 0; j < MAX_LEN; j++) {
-            printf("%s\n", data[i]);
-        }
+    float x, y, r;
+
+    string str;
+    cout << "Correct imput example: (x y, r)" << endl;
+    cout << "Enter coord of 1 circle: ";
+    getline(cin, str, '\n');
+    if (Coord(str, x, y, r)) {
+        cout << "1. ";
+        cout << "x = " << x << ", y = " << y << ", r = " << r;
+
+        cout << "\nS: " << S(r) << "\nP: " << P(r) << endl;
+    } else {
+        cout << "Ooops...";
     }
     return 0;
 }
