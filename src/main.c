@@ -19,8 +19,8 @@ int main()
     int capacity = 100;
     int size = 0;
     char arr[256];
-    Figure* new = (Figure*)malloc(sizeof(Figure) * capacity);
-    if (new == NULL) {
+    Figure* newPath = (Figure*)malloc(sizeof(Figure) * capacity);
+    if (newPath == NULL) {
         printf("Alloceted error\n");
         return 1;
     }
@@ -29,16 +29,16 @@ int main()
             if (arr[i - 1] == '\n') {
                 arr[i - 1] = '\0';
                 printf("-----str %d-----\n", size + 1);
-                if (!(First_Character(arr)) && !(Parser(&new[size], arr))) {
-                    Work(&new[size]);
+                if (!(First_Character(arr)) && !(Parser(&newPath[size], arr))) {
+                    Work(&newPath[size]);
                 }
                 size++;
                 i = 0;
             }
         } else {
             capacity *= 2;
-            new = (Figure*)realloc(new, capacity * sizeof(double));
-            if (new == NULL) {
+            newPath = (Figure*)realloc(newPath, capacity * sizeof(double));
+            if (newPath == NULL) {
                 printf("Alloceted error\n");
                 return 1;
             }
@@ -50,10 +50,10 @@ int main()
         for (j = 0 + i; j < size; j++) {
             if (i != j) {
                 // InSecTrTr(&a, &b, i, j);
-                InSecTrTr(&new[i], &new[j], i, j);
-                // InSecTrCir(&new[i], &new[j], i, j);
-                // InSecCirTr(&new[i], &new[j], i, j);
-                // InSecCirCir(&new[i], &new[j], i, j);
+                InSecTrTr(&newPath[i], &newPath[j], i, j);
+                // InSecTrCir(&newPath[i], &newPath[j], i, j);
+                // InSecCirTr(&newPath[i], &newPath[j], i, j);
+                // InSecCirCir(&newPath[i], &newPath[j], i, j);
             }
         }
     }
