@@ -10,8 +10,8 @@ typedef struct {
 
 enum F { TRIANGLE = 1, CIRCLE = 2, POINT = 3 };
 
-int min(int a, int b);
-int max(int a, int b);
+int minimum(int a, int b);
+int maximum(int a, int b);
 int det(int a, int b, int c, int d);
 int between(int a, int b, double c);
 void swap(int* a, int* b);

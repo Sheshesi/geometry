@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int min(int a, int b)
+int minimum(int a, int b)
 {
     if (a < b)
         return a;
@@ -15,7 +15,7 @@ int min(int a, int b)
     return 0;
 }
 
-int max(int a, int b)
+int maximum(int a, int b)
 {
     if (a < b)
         return b;
@@ -33,11 +33,11 @@ int between(int a, int b, double c)
 {
     int exp_1;
     int exp_2;
-    if (min(a, b) <= c + EPS)
+    if (minimum(a, b) <= c + EPS)
         exp_1 = 1;
     else
         exp_1 = 0;
-    if (c <= max(a, b) + EPS)
+    if (c <= maximum(a, b) + EPS)
         exp_2 = 1;
     else
         exp_2 = 0;
@@ -57,9 +57,9 @@ int intersect_1(int a, int b, int c, int d)
         swap(&a, &b);
     if (c > d)
         swap(&c, &d);
-    if (max(a, c) <= min(b, d))
+    if (maximum(a, c) <= minimum(b, d))
         return 1;
-    if (max(a, c) > min(b, d))
+    if (maximum(a, c) > minimum(b, d))
         return 0;
     return 0;
 }
