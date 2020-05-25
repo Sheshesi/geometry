@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int Parser(Figure* new, char* A)
+int Parser(Figure* newPath, char* A)
 {
     char B[256];
     int i = 0;
@@ -14,12 +14,12 @@ int Parser(Figure* new, char* A)
         i++;
     }
     B[i] = '\0';
-    Coordinats(new, A);
+    Coordinats(newPath, A);
     if (!(strcmp(B, "triangle"))) {
-        new->type = TRIANGLE;
+        newPath->type = TRIANGLE;
         return 0;
     } else if (!(strcmp(B, "circle"))) {
-        new->type = CIRCLE;
+        newPath->type = CIRCLE;
         return 0;
     } else {
         printf("Unknown type\n");
@@ -27,20 +27,20 @@ int Parser(Figure* new, char* A)
     }
 }
 
-int Coordinats(Figure* new, char* A)
+int Coordinats(Figure* newPath, char* A)
 {
     char* end;
     end = A;
     int i = -1;
     while (*A) {
-        new->c[i] = strtod(A, &end);
+        newPath->c[i] = strtod(A, &end);
         A = end;
         i++;
         while (!(isdigit(*A) || *A == '-' || *A == '+') && *A) {
             A++;
         }
     }
-    new->size = i;
+    newPath->size = i;
     return 0;
 }
 
