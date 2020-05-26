@@ -6,6 +6,7 @@ typedef struct {
     int type;
     double c[40];
     int size;
+    double* cord;
 } Figure;
 
 enum F { TRIANGLE = 1, CIRCLE = 2, POINT = 3 };
@@ -18,7 +19,7 @@ void swap(int* a, int* b);
 int intersect_1(int a, int b, int c, int d);
 void InSecTrTr(Figure* a, Figure* b, int a_1, int b_1);
 void InSecTrCir(Figure* a, Figure* b, int a_1, int b_1);
-void InSecCirTr(Figure* a, Figure* b, int a_1, int b_1);
+void InSecCirTr(Figure* a, Figure* b);
 void InSecCirCir(Figure* a, Figure* b, int a_1, int b_1);
 // int Intersection(Figure* x, Figure* y)
 void Work(Figure* newPath);

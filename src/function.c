@@ -73,8 +73,8 @@ void InSecTrTr(Figure* a, Figure* b, int a_1, int b_1)
         double x;
         double y;
         int boolPath;
-        if (a->type == TRIANGLE || a->size == 8) {
-            if (b->type == TRIANGLE || b->size == 8) {
+        if (a->type == TRIANGLE || a->cord == 8) {
+            if (b->type == TRIANGLE || b->cord == 8) {
                 A1 = a->c[1] - a->c[3], B1 = a->c[2] - a->c[0],
                 C1 = -A1 * a->c[0] - B1 * a->c[1];
                 A2 = b->c[1] - b->c[3], B2 = b->c[2] - a->c[0],
@@ -116,62 +116,45 @@ void InSecTrTr(Figure* a, Figure* b, int a_1, int b_1)
     }
 }
 
-void InSecCirTr(Figure* a, Figure* b, int a_1, int b_1)
+void InSecCirTr(Figure* a, Figure* b)
 {
-    if (a && b) {
-        int A1, B1, C1;
-        int A2, B2, C2;
-        int zn;
-        double x;
-        double y;
-        int boolPath;
-        if (a->type == CIRCLE || a->size == 3) {
-            if (b->type == TRIANGLE || b->size == 8) {
-                for (int i = 0; i < 6; i += 2) {
-                    A1 = a->c[2] * cos(0);
-                    B1 = a->c[2] * sin(0);
-                    C1 = pow(a->c[2], 2);
-                    A2 = b->c[1 + i] - b->c[3 + i],
-                    B2 = b->c[2 + i] - a->c[0 + i],
-                    C2 = -A2 * b->c[0 + i] - B2 * b->c[1 + i];
-                    zn = det(A1, B1, A2, B2);
-
-                    if (zn != 0) {
-                        x = -det(C1, B1, C2, B2) * 1. / zn;
-                        y = -det(A1, C1, A2, C2) * 1. / zn;
-
-                        boolPath = between(a->c[0 + i], a->c[2 + i], x)
-                                * between(a->c[1 + i], a->c[3 + i], y)
-                                * between(b->c[0 + i], b->c[2 + i], x)
-                                * between(b->c[1 + i], b->c[3 + i], y);
-                    }
-                    if (boolPath >= 1) {
-                        if ((det(A1, C1, A2, C2) == 0)
-                            && (det(B1, C1, B2, C2) == 0)) {
-                            if ((intersect_1(
-                                         a->c[0 + i],
-                                         a->c[2 + i],
-                                         b->c[0 + i],
-                                         b->c[2 + i])
-                                 * intersect_1(
-                                         a->c[1 + i],
-                                         a->c[3 + i],
-                                         b->c[3 + i],
-                                         b->c[3 + i]))
-                                == 1) {
-                                printf("Figure %d and %d "
-                                       "intersection\n",
-                                       (a_1 + 1),
-                                       (b_1 + 1));
-                            }
-                        }
-                    }
+    double A1 = 0, B1 = 0, C1 = 0, A2 = 0, B2 = 0, C2 = 0, zn = 0, x = 0, y = 0,
+           bool = 0, c = 0, d = 0;
+    if (a->type == 't') {
+        if (b->type == 't') {
+            A1 = a->cord[1] - a->cord[3], B1 = a->cord[2] - a->cord[0],
+            C1 = -A1 * a->cord[0] - B1 * a->cord[1];
+            A2 = b->cord[1] - b->cord[3], B2 = b->cord[2] - a->cord[0],
+            C2 = -A2 * b->cord[0] - B2 * b->cord[1];
+            zn = det(A1, B1, A2, B2);
+            if (zn != 0) {
+                x = -det(C1, B1, C2, B2) * 1. / zn;
+                y = -det(A1, C1, A2, C2) * 1. / zn;
+                bool = between(a->cord[0], a->cord[2], x)
+                        * between(a->cord[1], a->cord[3], y)
+                        * between(b->cord[0], b->cord[2], x)
+                        * between(b->cord[1], b->cord[3], y);
+                if (bool == 0) {
+                    return 0;
+                } else if (bool == 1) {
+                    return 1;
                 }
             } else {
-                return;
+                if ((det(A1, C1, A2, C2) == 0) && (det(B1, C1, B2, C2) == 0)) {
+                    c = (intersect(
+                            a->cord[0], a->cord[2], b->cord[0], b->cord[2]));
+                    d = (intersect(
+                            a->cord[1], a->cord[3], b->cord[3], b->cord[3]));
+                    if ((c * d) == 1) {
+                        return 1;
+                    }
+                }
             }
         }
+    } else {
+        return 0;
     }
+    return 0;
 }
 
 void Work(Figure* newPath)
@@ -197,7 +180,7 @@ void Work(Figure* newPath)
 void Print_Coordinats(Figure* newPath)
 {
     int j = 0;
-    while (j < newPath->size) {
+    while (j < newPath->cord) {
         printf("%d: %.2f\n", j + 1, newPath->c[j]);
         j++;
     }
@@ -209,7 +192,7 @@ void S_Circle(double* S, Figure* newPath)
         *S = 0.0;
         return;
     } else if (newPath->type == CIRCLE) {
-        if (newPath->size < 3 || newPath->c[2] <= 0) {
+        if (newPath->cord < 3 || newPath->c[2] <= 0) {
             *S = 0.0;
             return;
         }
@@ -226,7 +209,7 @@ void P_Circle(double* P, Figure* newPath)
         *P = 0.0;
         return;
     } else if (newPath->type == CIRCLE) {
-        if (newPath->size < 3 || newPath->c[2] <= 0) {
+        if (newPath->cord < 3 || newPath->c[2] <= 0) {
             *P = 0.0;
             return;
         }
@@ -247,7 +230,7 @@ void Vector(Figure* newPath, double* a, double* b, double* c)
         if (c)
             *c = 0;
         return;
-    } else if (newPath->type == TRIANGLE && newPath->size >= 8) {
+    } else if (newPath->type == TRIANGLE && newPath->cord >= 8) {
         *a
                 = sqrt(pow((newPath->c[2] - newPath->c[0]), 2.0)
                        + pow((newPath->c[3] - newPath->c[1]), 2.0));
