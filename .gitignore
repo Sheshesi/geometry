@@ -1,6 +1,10 @@
+src/CMakeLists.txt
+src/cmake-build-debug/*
+/.idea/*
+*.out
 *.o
-main
-input*
-a.out
-struct*function
-testing
+test/CMakeLists.txt
+test/cmake-build-debug/*
+test/ctest.h
+bin/testing
+bin/geometry
