@@ -95,7 +95,7 @@ int intersection_cr_cr(struct figure circle_a, struct figure circle_b)
         return 0;
     }
 }
-double minimum(double a, double b)
+double min(double a, double b)
 {
     if (a < b)
         return a;
@@ -103,7 +103,7 @@ double minimum(double a, double b)
         return b;
     return 0;
 }
-double maximum(double a, double b)
+double max(double a, double b)
 {
     if (a < b)
         return b;
@@ -123,7 +123,7 @@ double between(double a, double b, double c)
         exp_1 = 1;
     else
         exp_1 = 0;
-    if (c <= maximum(a, b))
+    if (c <= max(a, b))
         exp_2 = 1;
     else
         exp_2 = 0;
@@ -141,9 +141,9 @@ int intersect(double a, double b, double c, double d)
         swap(&a, &b);
     if (c > d)
         swap(&c, &d);
-    if (maximum(a, c) <= minimum(b, d))
+    if (max(a, c) <= min(b, d))
         return 1;
-    if (maximum(a, c) > minimum(b, d))
+    if (max(a, c) > min(b, d))
         return 0;
     return 0;
 }

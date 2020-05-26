@@ -1,650 +1,156 @@
-#include "../src/function.h"
 #include "../thirdparty/ctest.h"
-
-CTEST(function, S_Circle_Circle_r2)
+#include <function.h>
+#include <stdlib.h>
+CTEST(geometry, crper)
 {
     // Given
-    Figure a = {CIRCLE, {0, 0, 2}, 3};
+    double radius = 3;
     // When
-    double result_a = 0.0;
-    S_Circle(&result_a, &a);
-
+    double res = cr_per(radius);
     // Then
-    const double expected_a = M_PI * 4;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    double exp = 18.885;
+    ASSERT_DBL_NEAR_TOL(res, exp, 0.5);
 }
-
-CTEST(function, S_Circle_Circle_r0)
+CTEST(geometry, trper)
 {
     // Given
-    Figure a = {CIRCLE, {0}, 3};
+    double cord[8] = {8, -4, 8, 4, 2, 0, 8, -4};
     // When
-    double result_a = 0.0;
-    S_Circle(&result_a, &a);
-
+    double res = tr_per(cord);
     // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    double exp = 22.422;
+    ASSERT_DBL_NEAR_TOL(res, exp, 0.5);
 }
-
-CTEST(function, S_Circle_Circle_coords_0)
+CTEST(geometry, crarea)
 {
     // Given
-    Figure a = {CIRCLE, {0}, 0};
+    double radius = 3;
+    ;
     // When
-    double result_a = 0.0;
-    S_Circle(&result_a, &a);
-
+    double res = cr_area(radius);
     // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    double exp = 28.274;
+    ASSERT_DBL_NEAR_TOL(res, exp, 0.5);
 }
-CTEST(function, S_Circle_Circle_coords_0_r5)
+CTEST(geometry, trarea)
 {
     // Given
-    Figure a = {CIRCLE, {0, 0, 5}, 0};
+    double cord[8] = {8, -4, 8, 4, 2, 0, 8, -4};
     // When
-    double result_a = 0.0;
-    S_Circle(&result_a, &a);
-
+    double res = tr_area(cord);
     // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    double exp = 24.000;
+    ASSERT_DBL_NEAR_TOL(res, exp, 0.5);
 }
-
-CTEST(function, S_Circle_Circle_coords_1)
+CTEST(geometry, min)
 {
     // Given
-    Figure a = {CIRCLE, {0}, 1};
+    double a = 3;
+    double b = 3;
+    double c = 5;
     // When
-    double result_a = 0.0;
-    S_Circle(&result_a, &a);
-
+    double res = min(a, b);
+    double res_t = min(a, c);
     // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    double exp = 0;
+    double exp_t = 3;
+    ASSERT_DBL_NEAR_TOL(res, exp, 0.5);
+    ASSERT_DBL_NEAR_TOL(res_t, exp_t, 0.5);
 }
-CTEST(function, S_Circle_Circle_coords_4)
+CTEST(geometry, max)
 {
     // Given
-    Figure a = {CIRCLE, {0}, 4};
+    double a = 3;
+    double b = 3;
+    double c = 5;
     // When
-    double result_a = 0.0;
-    S_Circle(&result_a, &a);
-
+    double res = max(a, b);
+    double res_t = max(a, c);
     // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    double exp = 0;
+    double exp_t = 5;
+    ASSERT_DBL_NEAR_TOL(res, exp, 0.5);
+    ASSERT_DBL_NEAR_TOL(res_t, exp_t, 0.5);
 }
-
-CTEST(function, S_Circle_Circle_r_not1)
+CTEST(geometry, caps)
 {
     // Given
-    Figure a = {CIRCLE, {0, 0, -1}, 3};
+    char str[] = "CiRcLe";
     // When
-    double result_a = 0.0;
-    S_Circle(&result_a, &a);
-
+    char* res = caps(str);
     // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    char* exp = "CIRCLE";
+    ASSERT_STR(res, exp);
 }
-CTEST(function, S_Circle_Triangle)
+CTEST(geometry, in_cr_tr)
 {
     // Given
-    Figure b = {TRIANGLE, {0, 0, 2, 2, 0, 3, 0, 0}, 8};
-
+    double* cord = (double*)malloc(3 * sizeof(double));
+    double* cord_f = (double*)malloc(8 * sizeof(double));
+    cord[0] = 3;
+    cord[1] = 3;
+    cord[2] = 4;
+    cord_f[0] = -8;
+    cord_f[1] = 4;
+    cord_f[2] = 8;
+    cord_f[3] = 4;
+    cord_f[4] = 2;
+    cord_f[5] = 0;
+    cord_f[6] = -8;
+    cord_f[7] = 4;
+    struct figure circle = {"circle", 'c', cord};
+    struct figure triangle = {"triangle", 't', cord_f};
     // When
-    double result_b = 0.0;
-    S_Circle(&result_b, &b);
-
+    int res = intersection_cr_tr(circle, triangle);
     // Then
-    const double expected_b = 0;
-
-    ASSERT_DBL_NEAR(expected_b, result_b);
+    int exp = 1;
+    ASSERT_EQUAL(res, exp);
 }
-
-CTEST(function, S_Circle_NULL)
+CTEST(geometry, in_tr_tr)
 {
     // Given
-    double result_c = 0.0;
-    S_Circle(&result_c, NULL);
-
-    // Then
-    const double expected_c = 0;
-
-    ASSERT_DBL_NEAR(expected_c, result_c);
-}
-/*----------------------------------------------------------------------------*/
-
-CTEST(function, P_Circle_Circle_r2)
-{
-    // Given
-    Figure a = {CIRCLE, {0, 0, 2}, 3};
+    double* cord = (double*)malloc(8 * sizeof(double));
+    double* cord_f = (double*)malloc(8 * sizeof(double));
+    cord[0] = -8;
+    cord[1] = 4;
+    cord[2] = 8;
+    cord[3] = 4;
+    cord[4] = 2;
+    cord[5] = 0;
+    cord[6] = -8;
+    cord[7] = 4;
+    cord_f[0] = -8;
+    cord_f[1] = 4;
+    cord_f[2] = 8;
+    cord_f[3] = 4;
+    cord_f[4] = 2;
+    cord_f[5] = 0;
+    cord_f[6] = -8;
+    cord_f[7] = 4;
+    struct figure triangle_f = {"triangle", 't', cord};
+    struct figure triangle = {"triangle", 't', cord_f};
     // When
-    double result_a = 0.0;
-    P_Circle(&result_a, &a);
-
+    int res = intersection_tr_tr(triangle_f, triangle);
     // Then
-    const double expected_a = M_PI * 4;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    int exp = 1;
+    ASSERT_EQUAL(res, exp);
 }
-
-CTEST(function, P_Circle_Circle_r0)
+CTEST(geometry, in_cr_cr)
 {
     // Given
-    Figure a = {CIRCLE, {0}, 3};
+    double* cord = (double*)malloc(3 * sizeof(double));
+    double* cord_f = (double*)malloc(3 * sizeof(double));
+    cord[0] = 3;
+    cord[1] = 3;
+    cord[2] = 3;
+    cord_f[0] = 3;
+    cord_f[1] = 3;
+    cord_f[2] = 5;
+    struct figure circle = {"circle", 'c', cord};
+    struct figure circle_f = {"circle", 'c', cord_f};
     // When
-    double result_a = 0.0;
-    P_Circle(&result_a, &a);
-
+    int res = intersection_cr_cr(circle, circle_f);
     // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
+    int exp = 0;
+    ASSERT_EQUAL(res, exp);
 }
-
-CTEST(function, P_Circle_Circle_coords_0)
-{
-    // Given
-    Figure a = {CIRCLE, {0}, 0};
-    // When
-    double result_a = 0.0;
-    P_Circle(&result_a, &a);
-
-    // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
-}
-
-CTEST(function, P_Circle_Circle_coords_0_r5)
-{
-    // Given
-    Figure a = {CIRCLE, {0, 0, 5}, 0};
-    // When
-    double result_a = 0.0;
-    P_Circle(&result_a, &a);
-
-    // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
-}
-
-CTEST(function, P_Circle_Circle_coords_1)
-{
-    // Given
-    Figure a = {CIRCLE, {0}, 1};
-    // When
-    double result_a = 0.0;
-    P_Circle(&result_a, &a);
-
-    // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
-}
-CTEST(function, P_Circle_Circle_coords_4)
-{
-    // Given
-    Figure a = {CIRCLE, {0}, 4};
-    // When
-    double result_a = 0.0;
-    P_Circle(&result_a, &a);
-
-    // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
-}
-
-CTEST(function, P_Circle_Circle_r_not1)
-{
-    // Given
-    Figure a = {CIRCLE, {0, 0, -1}, 3};
-    // When
-    double result_a = 0.0;
-    P_Circle(&result_a, &a);
-
-    // Then
-    const double expected_a = 0;
-
-    ASSERT_DBL_NEAR(expected_a, result_a);
-}
-
-CTEST(function, P_Circle_Triangle)
-{
-    // Given
-    Figure b = {TRIANGLE, {0, 0, 2, 2, 0, 3, 0, 0}, 8};
-
-    // When
-    double result_b = 0.0;
-    P_Circle(&result_b, &b);
-
-    // Then
-    const double expected_b = 0;
-
-    ASSERT_DBL_NEAR(expected_b, result_b);
-}
-
-CTEST(function, P_Circle_NULL)
-{
-    // Given
-    double result_c = 0.0;
-    P_Circle(&result_c, NULL);
-
-    // Then
-    const double expected_c = 0;
-
-    ASSERT_DBL_NEAR(expected_c, result_c);
-}
-/*----------------------------------------------------------------------------*/
-CTEST(function, P_triangle_triangle)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {-3, -2, -1, 0, -3, 2, -3, -2}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = a + b + c;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, P_Triangle_Circle)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {CIRCLE, {2, -3, 2}, 3};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, P_triangle_triangle_coord_0)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {-3, -2, -1, 0, -3, 2, -3, -2}, 0};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, P_triangle_triangle_coord_10)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {-3, -2, -1, 0, -3, 2, -3, -2}, 10};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = a + b + c;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, P_triangle_triangle_all_coordinates_0)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, P_triangle_triangle_345)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 12.0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-/*
-CTEST(function, P_triangle_triangle_NULL)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {-3, -2, -1, 0, -3, 2, -3, -2}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(NULL, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-*/
-CTEST(function, P_triangle_triangle_one_line)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 3, 3, 4, 4, 0, 0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    P_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = a + b + c;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-/*----------------------------------------------------------------------------*/
-
-CTEST(function, S_triangle_triangle)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 6.0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, S_Triangle_Circle)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {CIRCLE, {2, -3, 2}, 3};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, S_triangle_triangle_coord_0)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {-3, -2, -1, 0, -3, 2, -3, -2}, 0};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, S_triangle_triangle_coord_10)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {-3, -2, -1, 0, -3, 2, -3, -2}, 10};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 4.0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, S_triangle_triangle_all_coordinates_0)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-CTEST(function, S_triangle_triangle_345)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 6.0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-/*
-CTEST(function, S_triangle_triangle_NULL)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {-3, -2, -1, 0, -3, 2, -3, -2}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(NULL, a, b, c);
-
-    // Then
-    const double expected_d = 0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-*/
-CTEST(function, S_triangle_triangle_one_line)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 3, 3, 4, 4, 0, 0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double result_d = 0.0;
-    S_Triangle(&result_d, a, b, c);
-
-    // Then
-    const double expected_d = 0.0;
-
-    ASSERT_DBL_NEAR(expected_d, result_d);
-}
-
-/*----------------------------------------------------------------------------*/
-
-CTEST(function, Vector)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(&d, &a, &b, &c);
-    // When
-    double expected_a = 3;
-    double expected_b = 5;
-    double expected_c = 4;
-    // Then
-    ASSERT_DBL_NEAR(expected_a, a);
-    ASSERT_DBL_NEAR(expected_b, b);
-    ASSERT_DBL_NEAR(expected_c, c);
-}
-
-CTEST(function, Vector_NULL1)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(NULL, &a, &b, &c);
-    // When
-    double expected_a = 0;
-    double expected_b = 0;
-    double expected_c = 0;
-    // Then
-    ASSERT_DBL_NEAR(expected_a, a);
-    ASSERT_DBL_NEAR(expected_b, b);
-    ASSERT_DBL_NEAR(expected_c, c);
-}
-
-CTEST(function, Vector_NULL2)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(&d, NULL, &b, &c);
-    // When
-    double expected_a = 0;
-    double expected_b = 0;
-    double expected_c = 0;
-    // Then
-    //    ASSERT_DBL_NEAR(expected_a, a);
-    ASSERT_DBL_NEAR(expected_b, b);
-    ASSERT_DBL_NEAR(expected_c, c);
-}
-
-CTEST(function, Vector_NULL3)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(&d, &a, NULL, &c);
-    // When
-    double expected_a = 0;
-    double expected_b = 0;
-    double expected_c = 0;
-    // Then
-    ASSERT_DBL_NEAR(expected_a, a);
-    //    ASSERT_DBL_NEAR(expected_b, b);
-    ASSERT_DBL_NEAR(expected_c, c);
-}
-
-CTEST(function, Vector_NULL4)
-{
-    // Given
-    double a;
-    double b;
-    double c;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(&d, &a, &b, NULL);
-    // When
-    double expected_a = 0;
-    double expected_b = 0;
-    double expected_c = 0;
-    // Then
-    ASSERT_DBL_NEAR(expected_a, a);
-    ASSERT_DBL_NEAR(expected_b, b);
-    //    ASSERT_DBL_NEAR(expected_c, c);
-}
-
-CTEST(function, Vector_NULL5)
-{
-    // Given
-    double a = -1;
-    double b = -1;
-    double c = -1;
-    Figure d = {TRIANGLE, {0, 0, 0, 3, 4, 0, 0, 0}, 8};
-    Vector(NULL, NULL, NULL, NULL);
-    // When
-    double expected_a = -1;
-    double expected_b = -1;
-    double expected_c = -1;
-
-    ASSERT_DBL_NEAR(expected_a, a);
-    ASSERT_DBL_NEAR(expected_b, b);
-    ASSERT_DBL_NEAR(expected_c, c);
-    // Then
-}
-/*----------------------------------------------------------------------------*/
