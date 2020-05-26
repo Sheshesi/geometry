@@ -1,0 +1,16 @@
+#### this line is a comment ####
+#### if you want to write a comment, start your line with '#' ####
+#### please enter the coordinates of a triangle or circle ####
+#### no more than 100, figures at a one time ####
+#### example of correct input: triangle(aX,aY;bX,bY;cX,cY;aX,aY) ####
+#### example of correct input: circle(centerX;centerY;radius) ####
+circle( 0 ; 0 ; 4.1 )
+CIRCLE(0;0;1.2)
+triangle (8,-4;8,4;2,0;8, -4)
+triangle(-8,-4;-8,4;-2,0;-8,-4)
+TRianglE(0,6 ; 2, 8;-2,8;0,6)
+#circle(0;0;-4)
+#CIRCLE(0;0,1.2)
+#triangle(0,0;0,0;0,0;0,0)
+#triangle(-8,-4/-8,4/-2,0/-8,a)
+#poligon(0,6;2,8;-2,8;0,6)
