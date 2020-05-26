@@ -1,12 +1,101 @@
-#include "function.h"
 #include "parser.h"
-#include <ctype.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-int minimum(int a, int b)
+#define MAX_LEN 100
+#define pi 3.14159265359
+struct figure {
+    char* name;
+    char type;
+    double* cord;
+    double per;
+    double area;
+    char** inc;
+};
+double cr_per(double radius)
+{
+    double per = 0;
+    per = 2 * pi * radius;
+    return per;
+}
+double cr_area(double radius)
+{
+    double area = 0;
+    area = pi * radius * radius;
+    return area;
+}
+double tr_per(double* cord)
+{
+    double per = 0;
+    double a = 0, b = 0, c = 0;
+    a = side_length(cord[0], cord[1], cord[2], cord[3]);
+    b = side_length(cord[2], cord[3], cord[4], cord[5]);
+    c = side_length(cord[4], cord[5], cord[0], cord[1]);
+    per = a + b + c;
+    return per;
+}
+double tr_area(double* cord)
+{
+    double area = 0;
+    double h_per = 0;
+    double a = 0, b = 0, c = 0;
+    a = side_length(cord[0], cord[1], cord[2], cord[3]);
+    b = side_length(cord[2], cord[3], cord[4], cord[5]);
+    c = side_length(cord[4], cord[5], cord[0], cord[1]);
+    h_per = (tr_per(cord) / 2);
+    area = sqrt(h_per * (h_per - a) * (h_per - b) * (h_per - c));
+    return area;
+}
+int intersection_cr_tr(struct figure circle, struct figure triangle)
+{
+    if (circle.type != 'c' || triangle.type != 't') {
+        printf("%s\n", "Input ERROR");
+        return -1;
+    }
+    if (side_length(
+                triangle.cord[0],
+                triangle.cord[1],
+                circle.cord[0],
+                circle.cord[1])
+        <= circle.cord[2]) {
+        return 1;
+    }
+    if (side_length(
+                triangle.cord[2],
+                triangle.cord[3],
+                circle.cord[0],
+                circle.cord[1])
+        <= circle.cord[2]) {
+        return 1;
+    }
+    if (side_length(
+                triangle.cord[4],
+                triangle.cord[5],
+                circle.cord[0],
+                circle.cord[1])
+        <= circle.cord[2]) {
+        return 1;
+    }
+    return 0;
+}
+int intersection_cr_cr(struct figure circle_a, struct figure circle_b)
+{
+    double d = (circle_a.cord[0] - circle_b.cord[0])
+                    * (circle_a.cord[0] - circle_b.cord[0])
+            + (circle_a.cord[1] - circle_b.cord[1])
+                    * (circle_a.cord[1] - circle_b.cord[1]);
+    if (d <= (circle_a.cord[2] + circle_b.cord[2])
+                        * (circle_a.cord[2] + circle_b.cord[2])
+        && d >= (circle_a.cord[2] > circle_b.cord[2]
+                         ? circle_a.cord[2] - circle_b.cord[2]
+                         : circle_b.cord[2] - circle_a.cord[2])) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+double minimum(double a, double b)
 {
     if (a < b)
         return a;
@@ -14,8 +103,7 @@ int minimum(int a, int b)
         return b;
     return 0;
 }
-
-int maximum(int a, int b)
+double maximum(double a, double b)
 {
     if (a < b)
         return b;
@@ -23,35 +111,31 @@ int maximum(int a, int b)
         return a;
     return 0;
 }
-
-int det(int a, int b, int c, int d)
+double det(double a, double b, double c, double d)
 {
     return a * d - b * c;
 }
-
-int between(int a, int b, double c)
+double between(double a, double b, double c)
 {
-    int exp_1;
-    int exp_2;
-    if (minimum(a, b) <= c + EPS)
+    double exp_1;
+    double exp_2;
+    if (min(a, b) <= c)
         exp_1 = 1;
     else
         exp_1 = 0;
-    if (c <= maximum(a, b) + EPS)
+    if (c <= maximum(a, b))
         exp_2 = 1;
     else
         exp_2 = 0;
     return exp_1 * exp_2;
 }
-
-void swap(int* a, int* b)
+void swap(double* a, double* b)
 {
-    int tmp = *a;
+    double tmp = *a;
     *a = *b;
     *b = tmp;
 }
-
-int intersect_1(int a, int b, int c, int d)
+int intersect(double a, double b, double c, double d)
 {
     if (a > b)
         swap(&a, &b);
@@ -63,77 +147,24 @@ int intersect_1(int a, int b, int c, int d)
         return 0;
     return 0;
 }
-
-void InSecTrTr(Figure* a, Figure* b, int a_1, int b_1)
-{
-    if (a && b) {
-        int A1, B1, C1;
-        int A2, B2, C2;
-        int zn;
-        double x;
-        double y;
-        int boolPath;
-        if (a->type == TRIANGLE || a->cord == 8) {
-            if (b->type == TRIANGLE || b->cord == 8) {
-                A1 = a->c[1] - a->c[3], B1 = a->c[2] - a->c[0],
-                C1 = -A1 * a->c[0] - B1 * a->c[1];
-                A2 = b->c[1] - b->c[3], B2 = b->c[2] - a->c[0],
-                C2 = -A2 * b->c[0] - B2 * b->c[1];
-                zn = det(A1, B1, A2, B2);
-
-                if (zn != 0) {
-                    x = -det(C1, B1, C2, B2) * 1. / zn;
-                    y = -det(A1, C1, A2, C2) * 1. / zn;
-
-                    boolPath = between(a->c[0], a->c[2], x)
-                            * between(a->c[1], a->c[3], y)
-                            * between(b->c[0], b->c[2], x)
-                            * between(b->c[1], b->c[3], y);
-                    if (boolPath == 0) {
-                        return;
-                    } else if (boolPath == 1) {
-                        printf("Figure %d and %d intersection\n",
-                               (a_1 + 1),
-                               (b_1 + 1));
-                    }
-                } else {
-                    if ((det(A1, C1, A2, C2) == 0)
-                        && (det(B1, C1, B2, C2) == 0)) {
-                        if ((intersect_1(a->c[0], a->c[2], b->c[0], b->c[2])
-                             * intersect_1(a->c[1], a->c[3], b->c[3], b->c[3]))
-                            == 1) {
-                            printf("Figure %d and %d "
-                                   "intersection\n",
-                                   (a_1 + 1),
-                                   (b_1 + 1));
-                        }
-                    }
-                }
-            }
-        } else {
-            return;
-        }
-    }
-}
-
-void InSecCirTr(Figure* a, Figure* b)
+int intersection_tr_tr(struct figure a, struct figure b)
 {
     double A1 = 0, B1 = 0, C1 = 0, A2 = 0, B2 = 0, C2 = 0, zn = 0, x = 0, y = 0,
            bool = 0, c = 0, d = 0;
-    if (a->type == 't') {
-        if (b->type == 't') {
-            A1 = a->cord[1] - a->cord[3], B1 = a->cord[2] - a->cord[0],
-            C1 = -A1 * a->cord[0] - B1 * a->cord[1];
-            A2 = b->cord[1] - b->cord[3], B2 = b->cord[2] - a->cord[0],
-            C2 = -A2 * b->cord[0] - B2 * b->cord[1];
+    if (a.type == 't') {
+        if (b.type == 't') {
+            A1 = a.cord[1] - a.cord[3], B1 = a.cord[2] - a.cord[0],
+            C1 = -A1 * a.cord[0] - B1 * a.cord[1];
+            A2 = b.cord[1] - b.cord[3], B2 = b.cord[2] - a.cord[0],
+            C2 = -A2 * b.cord[0] - B2 * b.cord[1];
             zn = det(A1, B1, A2, B2);
             if (zn != 0) {
                 x = -det(C1, B1, C2, B2) * 1. / zn;
                 y = -det(A1, C1, A2, C2) * 1. / zn;
-                bool = between(a->cord[0], a->cord[2], x)
-                        * between(a->cord[1], a->cord[3], y)
-                        * between(b->cord[0], b->cord[2], x)
-                        * between(b->cord[1], b->cord[3], y);
+                bool = between(a.cord[0], a.cord[2], x)
+                        * between(a.cord[1], a.cord[3], y)
+                        * between(b.cord[0], b.cord[2], x)
+                        * between(b.cord[1], b.cord[3], y);
                 if (bool == 0) {
                     return 0;
                 } else if (bool == 1) {
@@ -141,10 +172,8 @@ void InSecCirTr(Figure* a, Figure* b)
                 }
             } else {
                 if ((det(A1, C1, A2, C2) == 0) && (det(B1, C1, B2, C2) == 0)) {
-                    c = (intersect(
-                            a->cord[0], a->cord[2], b->cord[0], b->cord[2]));
-                    d = (intersect(
-                            a->cord[1], a->cord[3], b->cord[3], b->cord[3]));
+                    c = (intersect(a.cord[0], a.cord[2], b.cord[0], b.cord[2]));
+                    d = (intersect(a.cord[1], a.cord[3], b.cord[3], b.cord[3]));
                     if ((c * d) == 1) {
                         return 1;
                     }
@@ -156,111 +185,108 @@ void InSecCirTr(Figure* a, Figure* b)
     }
     return 0;
 }
-
-void Work(Figure* newPath)
+void print_list(struct figure list[], int n)
 {
-    double S, P;
-    double a, b, c;
-    if (newPath->type == CIRCLE) {
-        printf("Figure circle\n");
-        S_Circle(&S, newPath);
-        P_Circle(&P, newPath);
-        printf("S = %.3f\nP = %.3f\n", S, P);
-    } else if (newPath->type == TRIANGLE) {
-        printf("Figure triangle\n");
-        Vector(newPath, &a, &b, &c);
-        P_Triangle(&P, a, b, c);
-        S_Triangle(&S, a, b, c);
-        printf("S = %.12f\nP = %.12f\n", S, P);
-        printf("Coordinats:\n");
+    for (int i = 0; i < n; i++) {
+        printf(" %s\n", list[i].name);
+        printf("   perimeter = %.4f\n", list[i].per);
+        printf("   area = %.4f\n", list[i].area);
+        if (strlen(list[i].inc[0]) > 0) {
+            printf("   intersects:\n");
+        }
+        for (int j = 0; j < n; j++) {
+            if (strlen(list[i].inc[j]) > 0) {
+                printf("      %s\n", list[i].inc[j]);
+            }
+        }
+        printf("\n");
     }
-    Print_Coordinats(newPath);
 }
-
-void Print_Coordinats(Figure* newPath)
+char* caps(char str[])
 {
+    const char trin[] = "triangle";
+    const char cap_trin[] = "TRIANGLE";
+    const char circ[] = "circle";
+    const char cap_circ[] = "CIRCLE";
     int j = 0;
-    while (j < newPath->cord) {
-        printf("%d: %.2f\n", j + 1, newPath->c[j]);
-        j++;
-    }
-}
-
-void S_Circle(double* S, Figure* newPath)
-{
-    if (newPath == NULL) {
-        *S = 0.0;
-        return;
-    } else if (newPath->type == CIRCLE) {
-        if (newPath->cord < 3 || newPath->c[2] <= 0) {
-            *S = 0.0;
-            return;
+    for (int i = 0; str[i] != '\0'; i++) {
+        if (str[i] == trin[j] || str[i] == cap_trin[j]) {
+            str[i] = cap_trin[j];
+            j++;
+        } else if (str[i] == circ[j] || str[i] == cap_circ[j]) {
+            str[i] = cap_circ[j];
+            j++;
         }
-        double r = newPath->c[2];
-        *S = M_PI * (r * r);
-        return;
     }
-    *S = 0.0;
+    return str;
 }
-
-void P_Circle(double* P, Figure* newPath)
+void fill_list(char** data, int count)
 {
-    if (newPath == NULL) {
-        *P = 0.0;
-        return;
-    } else if (newPath->type == CIRCLE) {
-        if (newPath->cord < 3 || newPath->c[2] <= 0) {
-            *P = 0.0;
-            return;
+    struct figure* list = (struct figure*)malloc(count * sizeof(struct figure));
+    for (int i = 0; i < count; i++) {
+        char* new_name = (char*)malloc(MAX_LEN * sizeof(char));
+        new_name[0] = (char)(i + 1 + 48);
+        new_name[1] = '.';
+        list[i].name = strcat(new_name, squeeze(data[i]));
+        list[i].name = caps(list[i].name);
+        if (data[i][0] == 't' || data[i][0] == 'T') {
+            list[i].type = 't';
+        } else {
+            list[i].type = 'c';
         }
-        double r = newPath->c[2];
-        *P = 2 * M_PI * r;
-        return;
+        list[i].cord = cord_get(data[i]);
+        if (list[i].type == 't') {
+            list[i].per = tr_per(list[i].cord);
+            list[i].area = tr_area(list[i].cord);
+        } else {
+            list[i].per = cr_per(list[i].cord[2]);
+            list[i].area = cr_area(list[i].cord[2]);
+        }
     }
-    *P = 0.0;
-}
+    int k = 0;
+    for (int i = 0; i < count; i++) {
+        char** intersec_matrix = (char**)malloc(count * sizeof(char*));
+        for (int ii = 0; ii < count; ii++) {
+            intersec_matrix[ii] = (char*)malloc(MAX_LEN * sizeof(char));
+        }
+        for (int ii = 0; ii < count; ii++) {
+            for (int jj = 0; jj < MAX_LEN; jj++) {
+                intersec_matrix[ii][jj] = 0;
+            }
+        }
+        for (int j = 0; j < count; j++) {
+            if (i == j) {
+                continue;
+            }
+            if (list[i].type == 'c') {
+                if (list[j].type == 'c') {
+                    if (intersection_cr_cr(list[i], list[j])) {
+                        intersec_matrix[k] = list[j].name;
+                        k++;
+                    }
+                } else {
+                    if (intersection_cr_tr(list[i], list[j])) {
+                        intersec_matrix[k] = list[j].name;
+                        k++;
+                    }
+                }
+            } else {
+                if (list[j].type == 't') {
+                    if (intersection_tr_tr(list[i], list[j])) {
+                        intersec_matrix[k] = list[j].name;
+                        k++;
+                    }
 
-void Vector(Figure* newPath, double* a, double* b, double* c)
-{
-    if (newPath == NULL || a == NULL || b == NULL || c == NULL) {
-        if (a)
-            *a = 0;
-        if (b)
-            *b = 0;
-        if (c)
-            *c = 0;
-        return;
-    } else if (newPath->type == TRIANGLE && newPath->cord >= 8) {
-        *a
-                = sqrt(pow((newPath->c[2] - newPath->c[0]), 2.0)
-                       + pow((newPath->c[3] - newPath->c[1]), 2.0));
-        *b
-                = sqrt(pow((newPath->c[4] - newPath->c[2]), 2.0)
-                       + pow((newPath->c[5] - newPath->c[3]), 2.0));
-        *c
-                = sqrt(pow((newPath->c[0] - newPath->c[4]), 2.0)
-                       + pow((newPath->c[1] - newPath->c[5]), 2.0));
-        return;
+                } else {
+                    if (intersection_cr_tr(list[j], list[i])) {
+                        intersec_matrix[k] = list[j].name;
+                        k++;
+                    }
+                }
+            }
+        }
+        list[i].inc = intersec_matrix;
+        k = 0;
     }
-    *a = *b = *c = 0;
-    return;
-}
-
-void P_Triangle(double* P, double a, double b, double c)
-{
-    if (P == NULL) {
-        *P = 0.0;
-        return;
-    }
-    *P = a + b + c;
-}
-
-void S_Triangle(double* S, double a, double b, double c)
-{
-    if (S == NULL) {
-        *S = 0.0;
-        return;
-    }
-    double p = (a + b + c) / 2;
-    *S = sqrt(p * (p - a) * (p - b) * (p - c));
+    print_list(list, count);
 }

@@ -1,33 +1,27 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
-#define M_PI 3.14159265358979323846
-#define EPS 1E-9
-typedef struct {
-    int type;
-    double c[40];
-    int size;
+struct figure {
+    char* name;
+    char type;
     double* cord;
-} Figure;
-
-enum F { TRIANGLE = 1, CIRCLE = 2, POINT = 3 };
-
-int minimum(int a, int b);
-int maximum(int a, int b);
-int det(int a, int b, int c, int d);
-int between(int a, int b, double c);
-void swap(int* a, int* b);
-int intersect_1(int a, int b, int c, int d);
-void InSecTrTr(Figure* a, Figure* b, int a_1, int b_1);
-void InSecTrCir(Figure* a, Figure* b, int a_1, int b_1);
-void InSecCirTr(Figure* a, Figure* b);
-void InSecCirCir(Figure* a, Figure* b, int a_1, int b_1);
-// int Intersection(Figure* x, Figure* y)
-void Work(Figure* newPath);
-void Print_Coordinats(Figure* newPath);
-void S_Circle(double* S, Figure* newPath);
-void P_Circle(double* P, Figure* newPath);
-void Vector(Figure* newPath, double* a, double* b, double* c);
-void S_Triangle(double* S, double a, double b, double c);
-void P_Triangle(double* P, double a, double b, double c);
-
+    double per;
+    double area;
+    char** inc;
+};
+double cr_per(double radius);
+double cr_area(double radius);
+double tr_per(double* cord);
+double tr_area(double* cord);
+int intersection_cr_tr(struct figure circle, struct figure triangle);
+int intersection_cr_cr(struct figure circle_a, struct figure circle_b);
+double minimum(double a, double b);
+double maximum(double a, double b);
+double det(double a, double b, double c, double d);
+double between(double a, double b, double c);
+void swap(double* a, double* b);
+int intersect(double a, double b, double c, double d);
+int intersection_tr_tr(struct figure a, struct figure b);
+void print_list(struct figure list[], int n);
+char* caps(char str[]);
+void fill_list(char** data, int count);
 #endif
